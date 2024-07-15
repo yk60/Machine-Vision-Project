@@ -31,13 +31,16 @@ def create_dict_helper(dir, file, dict):
 def create_dictionary(dir):
     dict = {}
     try:
-        # if input is a full path to image
+        # if dir is a full path to an image
         if os.path.isfile(dir):
             file = os.path.basename(dir)
             create_dict_helper(os.path.dirname(dir), file, dict) 
             return dict  
-        for file in os.listdir(dir):
-            create_dict_helper(dir, file, dict)             
+        for label in ['0']:
+            dir = os.path.join(dir, label)
+            for file in os.listdir(dir):
+                create_dict_helper(dir, file, dict)  
+                print(file)           
         return dict
     except FileNotFoundError:
         print('FileNotFoundError')

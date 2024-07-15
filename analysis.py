@@ -2,10 +2,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from imageutils import show_image
 
-def analysis(dict, matrix):
-    analysis_all(matrix)    
-
-
 def analysis_all(matrix):
     # find similarity between images
     dot_product = np.dot(matrix.T, matrix)
@@ -15,7 +11,8 @@ def analysis_all(matrix):
     # find normalized similarity measure
     cos_similarity = dot_product / (norms @ norms.T)
     cos_similarity = np.round(cos_similarity, 2)
-    print(f"cos_similarity:\n {cos_similarity}")
+    # print(f"cos_similarity:\n {cos_similarity}")
+    return cos_similarity
 
 # find similarities between two images
 def analysis_pair(matrix):

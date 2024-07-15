@@ -1,0 +1,12 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+/MNIST
+/MNIST_dataset
+/Gray_Images
+/images 
+
+*.pyc
+*.xml
+
+.idea/
