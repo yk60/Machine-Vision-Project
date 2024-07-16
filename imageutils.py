@@ -36,11 +36,9 @@ def create_dictionary(dir):
             file = os.path.basename(dir)
             create_dict_helper(os.path.dirname(dir), file, dict) 
             return dict  
-        for label in ['0']:
-            dir = os.path.join(dir, label)
-            for file in os.listdir(dir):
-                create_dict_helper(dir, file, dict)  
-                print(file)           
+    
+        for file in os.listdir(dir):
+            create_dict_helper(dir, file, dict)  
         return dict
     except FileNotFoundError:
         print('FileNotFoundError')

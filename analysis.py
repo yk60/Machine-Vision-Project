@@ -2,8 +2,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from imageutils import show_image
 
+# find cos similarity between all possible pairs of images
 def analysis_all(matrix):
-    # find similarity between images
     dot_product = np.dot(matrix.T, matrix)
     # find color intensity
     norms = np.linalg.norm(matrix, axis=0)
