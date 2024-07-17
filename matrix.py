@@ -1,13 +1,12 @@
 import numpy as np
 from imageutils import create_dictionary, create_matrix
 from analysis import analysis_all
-
 class DigitMatrices:
     matrices = {}
     def __init__(self):
         None
     def add_object(self, DigitMatrix):
-        self.matrices[DigitMatrix] = DigitMatrix
+        self.matrices[DigitMatrix.digit] = DigitMatrix
     def printMatrices(self):
         for matrix in self.matrices:
             print(f"Digit: {matrix.digit}")
@@ -34,11 +33,11 @@ class DigitMatrix:
         # print(f"matrix: {matrix}")
         self.cos_similarity = analysis_all(self.matrix)
         # print(self.cos_similarity)
+    # def show_matrix(self):
+    #     generate_html_table(list(self.img_dict.keys), self.cos_similarity)
+    def get_matrix(self):
+        return self
 
-    
-    
-    
-    # generate_html_table(list(dict.keys()), cos_similarity)   
     
     
 

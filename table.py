@@ -1,4 +1,6 @@
-def generate_html_table(imgs, cosine_similarity_matrix):
+from matrix import DigitMatrix
+def generate_html_table(DigitMatrix):
+    imgs = (list(DigitMatrix.img_dict.keys()))
     # Opening HTML structure
     html_content = """
     <!DOCTYPE html>
@@ -37,14 +39,14 @@ def generate_html_table(imgs, cosine_similarity_matrix):
     html_content += "<tr>"
     html_content += "<td>""</td>"
     for img in imgs:
-        html_content += f'<td><img src="images/{img}" alt="Image"></td>'
+        html_content += f'<td><img src="{DigitMatrix.path}/{img}" alt="Image"></td>'
     html_content += "</tr>"
     i = 0
-    for row in cosine_similarity_matrix:
+    for row in DigitMatrix.cos_similarity:
         html_content += "<tr>"
-        html_content += f'<th scope="row"><img src="images/{imgs[i]}" alt="Image"></th>\n'
-        for cos_similarity in row:
-            html_content += f"<td>{cos_similarity}</td>"
+        html_content += f'<th scope="row"><img src="{DigitMatrix.path}/{imgs[i]}" alt="Image"></th>\n'
+        for entry in row:
+            html_content += f"<td>{entry}</td>"
         html_content += "</tr>"
         i+=1
             

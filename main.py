@@ -15,9 +15,13 @@ if params_dict:
          folder = os.path.join(dir, subdir)
          obj = DigitMatrix(folder, subdir)
          digitMatrices.add_object(obj)
-    digitMatrices.printMatrices()
+    # digitMatrices.printMatrices()
 
-# file names, cos similarity
-    # generate_html_table(list(dict.keys()), cos_similarity)
+    if not digitMatrices.matrices['1']:
+         print('matrix not found')
+    generate_html_table(digitMatrices.matrices['1'])
+    
+         
+
 
     
