@@ -40,6 +40,7 @@ def generate_html_table(DigitMatrix):
     html_content += "<td>""</td>"
     for img in imgs:
         html_content += f'<td><img src="{DigitMatrix.path}/{img}" alt="Image"></td>'
+    html_content += f'<td>Average</td>'
     html_content += "</tr>"
     i = 0
     for row in DigitMatrix.cos_similarity:
@@ -47,6 +48,7 @@ def generate_html_table(DigitMatrix):
         html_content += f'<th scope="row"><img src="{DigitMatrix.path}/{imgs[i]}" alt="Image"></th>\n'
         for entry in row:
             html_content += f"<td>{entry}</td>"
+        html_content += f"<td>{DigitMatrix.row_avg[i]}</td>"
         html_content += "</tr>"
         i+=1
             

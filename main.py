@@ -2,6 +2,7 @@
 from genutils import parse_cmdline
 from table import generate_html_table
 from matrix import DigitMatrix, DigitMatrices
+from test import test_image
 import os
 
 
@@ -20,6 +21,9 @@ if params_dict:
     if not digitMatrices.matrices['1']:
          print('matrix not found')
     generate_html_table(digitMatrices.matrices['1'])
+    # if params_dict['testImage']:
+    #     test_image(params_dict['testImage'])
+         
     
          
 

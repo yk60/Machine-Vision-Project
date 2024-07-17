@@ -44,7 +44,7 @@ def create_dictionary(dir):
 def create_matrix(img_dict):
     if img_dict:
         matrix = np.column_stack(list(img_dict.values()))
-        print('Matrix shape:', matrix.shape)
+        # print('Matrix shape:', matrix.shape)
         return matrix
     return None
 

@@ -18,25 +18,34 @@ class DigitMatrix:
     img_dict = {}
     matrix = np.zeros(shape=(0,))
     cos_similarity = np.zeros(shape=(0,))
+    row_avg = []
+    rep_img = None
 
     def __init__(self, path, digit):
         self.path = path
         self.digit = digit
         self.setDict()
-        self.setMatrix()        
+        self.setMatrix()  
+        self.setRowAverage()   
+        self.setRepImg()   
 
     def setDict(self):
         self.img_dict = create_dictionary(self.path)
-    # returns the cos similarity matrix
     def setMatrix(self):
         self.matrix = create_matrix(self.img_dict)
-        # print(f"matrix: {matrix}")
         self.cos_similarity = analysis_all(self.matrix)
-        # print(self.cos_similarity)
     # def show_matrix(self):
     #     generate_html_table(list(self.img_dict.keys), self.cos_similarity)
     def get_matrix(self):
         return self
+    def setRowAverage(self):
+        self.row_avg = np.mean(self.cos_similarity, axis=1)
+        self.row_avg = np.round(self.row_avg, 2)
+    def setRepImg(self):
+        index = np.argmax(self.row_avg)
+        # self.img_dict[index]
+        print(f"Representative image index for digit {self.digit}: {index}")
+        
 
     
     
