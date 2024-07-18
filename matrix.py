@@ -43,13 +43,45 @@ class DigitMatrix:
         self.row_avg = np.round(self.row_avg, 2)
     def setRepImg(self):
         index = np.argmax(self.row_avg)
-        print(f"Index of representative image for digit {self.digit}: {index}")
+        print(f"Index of representative image for digit {self.digit}: {index}", end = ' ')
         self.representative_img = list(self.img_dict.keys())[index]
-        print(self.representative_img)
+        print(f"({self.representative_img})")
+  
         
+def generate_html_table(DigitMatrix):
+    imgs = (list(DigitMatrix.img_dict.keys()))
+    html_content = "<table><thead></thead><tbody>"
+    # Iterate through cosine similarity matrix to populate table rows
 
-    
-    
+    html_content += "<tr>"
+    html_content += "<td>""</td>"
+    for img in imgs:
+        html_content += f'<td><img src="{DigitMatrix.path}/{img}" alt="Image"></td>'
+    html_content += f'<td>Row Average</td>'
+    html_content += "</tr>"
+    i = 0
+    for row in DigitMatrix.cos_similarity:
+        html_content += "<tr>"
+        html_content += f'<th scope="row"><img src="{DigitMatrix.path}/{imgs[i]}" alt="Image"></th>\n'
+        for entry in row:
+            html_content += f"<td>{entry}</td>"
+        html_content += f"<td>{DigitMatrix.row_avg[i]}</td>"
+        html_content += "</tr>"
+        i+=1
+            
+    # Closing HTML structure
+    html_content += "</tbody></table>"
 
-#\MNIST\trainingSample\trainingSample\0
-#MNIST/trainingSample/trainingSample/0
+    # insert html_content(table) into placeholders in index.html
+    with open('index.html', 'r') as html_file:
+        index_html_content = html_file.read()
+    start_marker = "<!-- Start of table -->"
+    end_marker = "<!-- End of table -->"
+
+    start_content = index_html_content.split(start_marker)[0] + start_marker
+    end_content = end_marker + index_html_content.split(end_marker)[1]
+    updated_html_content = start_content + html_content + end_content
+
+
+    with open('index.html', 'w') as html_file:
+        html_file.write(updated_html_content)

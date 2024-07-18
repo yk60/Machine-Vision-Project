@@ -11,14 +11,17 @@ def test_image(digitMatrices, test_file):
     img_dict = create_dictionary(test_file)
     if not img_dict:
         print("Error: No dictionary created")
-    test_img = create_matrix(img_dict)    
+    test_img = create_matrix(img_dict)
+    list = []    
     for i in range(0, 10):
         digitMatrix = digitMatrices.matrices[str(i)]
         rep_img = digitMatrix.representative_img
         rep_img = digitMatrix.img_dict[rep_img]
         cos_similarity = np.round(analysis_pair(rep_img, test_img), 2)
-        show_image(rep_img)
-        show_image(test_img)
+        list.append(cos_similarity)
+        # show_image(rep_img)
+        # show_image(test_img)
         print(f"cos similarity between unknown img and {i}: {cos_similarity}")
+    print(f"\nResult: {max(list)}")
 
 

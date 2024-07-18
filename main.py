@@ -1,7 +1,6 @@
 # main executable used to test sample images
 from genutils import parse_cmdline
-from table import generate_html_table
-from matrix import DigitMatrix, DigitMatrices
+from matrix import DigitMatrix, DigitMatrices, generate_html_table
 from test import test_image
 import os
 
@@ -20,7 +19,7 @@ if params_dict:
 
     if not digitMatrices.matrices['1']:
          print('matrix not found')
-    generate_html_table(digitMatrices.matrices['1'])
+    generate_html_table(digitMatrices.matrices['2'])
     # classify unknown image
     if params_dict['testImage']:
         test_image(digitMatrices, params_dict['testImage'])
