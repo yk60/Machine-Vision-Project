@@ -14,7 +14,7 @@ def process_image(dir, file):
     arr = vectorize_array(np.round(arr, 2))   
     return arr
 
-# vectorize the 2D array into a single column vector (n x 1)
+# vectorize the 2D array into a 2D single column vector (n x 1)
 def vectorize_array(arr):
     return arr.reshape(-1, 1)
 
@@ -24,7 +24,7 @@ def create_dict_helper(dir, file, img_dict):
     else:
         print(f"Failed to vectorize the image: {file}")
 
-# load a directory of JPEG image files into a dict mapping : filename -> vectorized image.
+# load a directory of JPEG image files into a dict mapping : filename -> vectorized image (nx1)
 def create_dictionary(dir):
     img_dict = {}
     try:
@@ -49,6 +49,8 @@ def create_matrix(img_dict):
     return None
 
 def show_image(img_arr):
+    if img_arr.size == 784:
+        img_arr = img_arr.reshape(28, 28)
     plt.imshow(img_arr, cmap='gray') 
     plt.show() 
 

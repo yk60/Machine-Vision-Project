@@ -40,7 +40,7 @@ def generate_html_table(DigitMatrix):
     html_content += "<td>""</td>"
     for img in imgs:
         html_content += f'<td><img src="{DigitMatrix.path}/{img}" alt="Image"></td>'
-    html_content += f'<td>Average</td>'
+    html_content += f'<td>Row Average</td>'
     html_content += "</tr>"
     i = 0
     for row in DigitMatrix.cos_similarity:

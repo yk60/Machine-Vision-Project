@@ -21,8 +21,9 @@ if params_dict:
     if not digitMatrices.matrices['1']:
          print('matrix not found')
     generate_html_table(digitMatrices.matrices['1'])
-    # if params_dict['testImage']:
-    #     test_image(params_dict['testImage'])
+    # classify unknown image
+    if params_dict['testImage']:
+        test_image(digitMatrices, params_dict['testImage'])
          
     
          

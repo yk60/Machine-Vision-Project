@@ -14,15 +14,20 @@ def analysis_all(matrix):
     # print(f"cos_similarity:\n {cos_similarity}")
     return cos_similarity
 
-# find similarities between two images
-def analysis_pair(matrix):
-    dot_product = []
-    matrix = matrix.T
-    if matrix.shape[0] % 2 == 0:
-        for i in range (0, matrix.shape[0], 2):
-            dot_product.append(np.dot(matrix[i], matrix[i+1]))
-        dot_product = np.round(dot_product, 2)
-        print(f"Dot product: {dot_product}")
+# find similarity measure between two vectorized images
+# flatten the 2D matrices to 1D
+def analysis_pair(img1, img2):
+    if img1.shape == img2.shape:
+        dot_product = np.dot(img1.flatten(), img2.flatten())
+        cos_similarity = dot_product / (np.linalg.norm(img1) * np.linalg.norm(img2))
+        return cos_similarity
+
+
+# find the average cos similarity value for each image and all other images of the same digit
+def representative_img():
     return None
+
+
+
 
   

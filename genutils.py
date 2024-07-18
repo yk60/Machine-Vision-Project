@@ -7,7 +7,7 @@ def parse_cmdline(required_params):
     params = sys.argv[1:]
     if '--help' in params:
         print(f"Enter parameters for {sys.argv[0]}:", end="(")
-        print('-test: Enter the path to the image to vectorize')
+        # print('-test: Enter the path to the image to vectorize')
         for param in required_params:
             print(f"{param}=", end=" ")
         print(')')      

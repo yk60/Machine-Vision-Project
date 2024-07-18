@@ -2,16 +2,23 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from genutils import parse_cmdline
-from imageutils import create_dictionary, create_matrix
-from analysis import analysis_all
+from imageutils import create_dictionary, create_matrix, show_image
+from analysis import analysis_all, analysis_pair
+from matrix import DigitMatrices
 
-def test_image(img):
-    print('start test')
-    img_dict = create_dictionary(img)
+# compare cos similarity between test image and representative images for each digit
+def test_image(digitMatrices, test_file):
+    img_dict = create_dictionary(test_file)
     if not img_dict:
-        print("Error: No dictionary returned")
-    matrix = create_matrix(img_dict)
-    
-    # cos_similarity = analysis_all(matrix)
-    # print(cos_similarity)
+        print("Error: No dictionary created")
+    test_img = create_matrix(img_dict)    
+    for i in range(0, 10):
+        digitMatrix = digitMatrices.matrices[str(i)]
+        rep_img = digitMatrix.representative_img
+        rep_img = digitMatrix.img_dict[rep_img]
+        cos_similarity = np.round(analysis_pair(rep_img, test_img), 2)
+        show_image(rep_img)
+        show_image(test_img)
+        print(f"cos similarity between unknown img and {i}: {cos_similarity}")
+
 

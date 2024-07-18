@@ -13,13 +13,13 @@ class DigitMatrices:
             print(f"{matrix.cos_similarity}\n\n\n")
 
 class DigitMatrix:
-    digit = None
+    digit = None # String
     path = ""
     img_dict = {}
     matrix = np.zeros(shape=(0,))
     cos_similarity = np.zeros(shape=(0,))
     row_avg = []
-    rep_img = None
+    representative_img = None # filename(String)
 
     def __init__(self, path, digit):
         self.path = path
@@ -43,8 +43,9 @@ class DigitMatrix:
         self.row_avg = np.round(self.row_avg, 2)
     def setRepImg(self):
         index = np.argmax(self.row_avg)
-        # self.img_dict[index]
-        print(f"Representative image index for digit {self.digit}: {index}")
+        print(f"Index of representative image for digit {self.digit}: {index}")
+        self.representative_img = list(self.img_dict.keys())[index]
+        print(self.representative_img)
         
 
     
