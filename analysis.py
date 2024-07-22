@@ -10,7 +10,7 @@ def analysis_all(matrix):
     norms = norms.reshape(-1, 1)
     # find normalized similarity measure
     cos_similarity = dot_product / (norms @ norms.T)
-    cos_similarity = np.round(cos_similarity, 2)
+    cos_similarity = np.round(cos_similarity, 3)
     # print(f"cos_similarity:\n {cos_similarity}")
     return cos_similarity
 

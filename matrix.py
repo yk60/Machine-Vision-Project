@@ -41,11 +41,13 @@ class DigitMatrix:
         return self
     def setRowAverage(self):
         self.row_avg = np.mean(self.cos_similarity, axis=1)
-        self.row_avg = np.round(self.row_avg, 2)
+        self.row_avg = np.round(self.row_avg, 3)
     def setRepImg(self):
         index = np.argmax(self.row_avg)
-        # print(f"Index of representative image for digit {self.digit}: {index}", end = ' ')
-        self.representative_img = list(self.img_dict.keys())[index]
+        indices = np.argsort(self.row_avg)[::-1]
+        indices = indices[:3]
+        # print(f"Index of representative image for digit {self.digit}: {index}")
+        self.representative_img = [list(self.img_dict.keys())[index] for index in indices]
         # print(f"({self.representative_img})")
   
         

@@ -11,7 +11,7 @@ def process_image(dir, file):
     np.set_printoptions(threshold=np.inf, linewidth=np.inf)
     image = ImageOps.grayscale(image)
     arr = np.array(image) / 255.0
-    arr = vectorize_array(np.round(arr, 2))   
+    arr = vectorize_array(np.round(arr, 3))   
     return arr
 
 # vectorize the 2D array into a 2D single column vector (n x 1)

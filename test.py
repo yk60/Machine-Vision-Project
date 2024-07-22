@@ -7,7 +7,7 @@ from analysis import analysis_all, analysis_pair
 from matrix import DigitMatrices
 
 
-# compare cos similarity between test image and representative images for each digit
+# compare cos similarity between test images and representative images for each digit
 def test_image(digitMatrices, test_files):
     num_tests = tests_passed = tests_failed = 0
     if os.path.isdir(test_files):
@@ -18,13 +18,14 @@ def test_image(digitMatrices, test_files):
                 print("Error: No dictionary created")
                 return 1
             test_img = create_matrix(img_dict)
-            dict = {}    
+            dict = {}  # rep_img -> cos_similarity
             for i in range(0, 10):
+                # get indices of 3 rep imgs for each digit
                 digitMatrix = digitMatrices.matrices[str(i)]
-                rep_img = digitMatrix.representative_img
-                rep_img = digitMatrix.img_dict[rep_img]
-                cos_similarity = np.round(analysis_pair(rep_img, test_img), 2)
-                dict[i] = cos_similarity
+                rep_imgs = digitMatrix.representative_img
+                rep_imgs = [digitMatrix.img_dict[rep_img] for rep_img in rep_imgs]
+                cos_similarity = [np.round(analysis_pair(rep_img, test_img), 3) for rep_img in rep_imgs]
+                dict[i] = np.mean(cos_similarity)
                 # show_image(rep_img)
                 # show_image(test_img)
                 # print(f"cos similarity between unknown img and {i}: {cos_similarity}")
