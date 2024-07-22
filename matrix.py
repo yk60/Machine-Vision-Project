@@ -1,6 +1,7 @@
 import numpy as np
 from imageutils import create_dictionary, create_matrix
 from analysis import analysis_all
+import json
 class DigitMatrices:
     matrices = {}
     def __init__(self):
@@ -43,9 +44,9 @@ class DigitMatrix:
         self.row_avg = np.round(self.row_avg, 2)
     def setRepImg(self):
         index = np.argmax(self.row_avg)
-        print(f"Index of representative image for digit {self.digit}: {index}", end = ' ')
+        # print(f"Index of representative image for digit {self.digit}: {index}", end = ' ')
         self.representative_img = list(self.img_dict.keys())[index]
-        print(f"({self.representative_img})")
+        # print(f"({self.representative_img})")
   
         
 def generate_html_table(DigitMatrix):
