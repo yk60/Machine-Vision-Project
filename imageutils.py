@@ -2,12 +2,13 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 from PIL import Image, ImageOps
+from genutils import params_dict
 # from matrix import DigitMatrix, DigitMatrices
 
 # load an image file into a 2D numpy array of gray pixel values
 def process_image(dir, file):
     path = os.path.join(dir, file)
-    image = Image.open(path).resize((28, 28)) #optional parameter
+    image = Image.open(path).resize(params_dict['imgSize']) #optional parameter
     np.set_printoptions(threshold=np.inf, linewidth=np.inf)
     image = ImageOps.grayscale(image)
     arr = np.array(image) / 255.0
@@ -48,9 +49,10 @@ def create_matrix(img_dict):
         return matrix
     return None
 
-def show_image(img_arr):
-    if img_arr.size == 784:
-        img_arr = img_arr.reshape(28, 28)
+# check if size == height * width
+def show_image(img_arr):  
+    if img_arr.size == params_dict['imgSize'][0] * params_dict['imgSize'][1]:
+        img_arr = img_arr.reshape(params_dict['imgSize'])
     plt.imshow(img_arr, cmap='gray') 
     plt.show() 
 

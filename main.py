@@ -7,8 +7,9 @@ import time
 
 start_time = time.time()
 # build model
+optional_params = ['imgSize']
 required_params = ['filePath'] # add more
-params_dict = parse_cmdline(required_params)
+params_dict = parse_cmdline(required_params, optional_params)
 if params_dict:
     dir = params_dict['filePath']
     digitMatrices = DigitMatrices()
@@ -21,10 +22,12 @@ if params_dict:
 
     # if not digitMatrices.matrices['1']:
     #      print('matrix not found')
-    # generate_html_table(digitMatrices.matrices['2'])
+    generate_html_table(digitMatrices.matrices['2'])
     # classify unknown image
     if params_dict['testImage']:
         test_image(digitMatrices, params_dict['testImage'])
+else:
+    print('returned an empty dictionary')
 
 end_time = time.time()
 print(f"Execution time: {end_time - start_time} seconds")
