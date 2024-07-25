@@ -7,7 +7,7 @@ from analysis import analysis_all, analysis_pair
 from matrix import DigitMatrices
 
 
-# compare cos similarity between test images and representative images for each digit
+# method 1)compare cos similarity between test images and representative images for each digit
 def test_image(digitMatrices, test_files):
     num_tests = tests_passed = tests_failed = 0
     if os.path.isdir(test_files):
@@ -24,7 +24,7 @@ def test_image(digitMatrices, test_files):
                 digitMatrix = digitMatrices.matrices[str(i)]
                 rep_imgs = digitMatrix.representative_img
                 rep_imgs = [digitMatrix.img_dict[rep_img] for rep_img in rep_imgs]
-                cos_similarity = [np.round(analysis_pair(rep_img, test_img), 3) for rep_img in rep_imgs]
+                cos_similarity = [np.round(analysis_pair(rep_img, test_img), 10) for rep_img in rep_imgs]
                 dict[i] = np.mean(cos_similarity)
                 # show_image(rep_img)
                 # show_image(test_img)
@@ -44,6 +44,4 @@ def test_image(digitMatrices, test_files):
         print(f"Accuracy: {(tests_passed / num_tests) * 100}%")
     else:
         print("Invalid test directory")
-
-
-
+ 

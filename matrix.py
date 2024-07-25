@@ -1,7 +1,7 @@
 import numpy as np
-from imageutils import create_dictionary, create_matrix
+from imageutils import vectorize_img
 from analysis import analysis_all
-import json
+
 class DigitMatrices:
     matrices = {}
     def __init__(self):
@@ -12,6 +12,18 @@ class DigitMatrices:
         for matrix in self.matrices:
             print(f"Digit: {matrix.digit}")
             print(f"{matrix.cos_similarity}\n\n\n")
+    # project unknown image y onto the subspaces of each object (0-9)
+    def project_to_subspace(self, img_dict, y):
+        # check if there are multiple test images
+        i = 0
+        if y.shape[1] > 1:
+            for col in np.hsplit(y, y.shape[1]):
+                U_matrices = [matrix.U for matrix in self.matrices.values()] 
+                projections = [np.dot(U.T, col) for U in U_matrices]
+                actual = np.argmax([np.linalg.norm(proj) for proj in projections])
+                # insertion order in img_dict = order of imgs tested
+                print(f"({list(img_dict.keys())[i]:<13}) Actual: {actual} Expected:")
+                i += 1
 
 class DigitMatrix:
     digit = None # String
@@ -21,24 +33,22 @@ class DigitMatrix:
     cos_similarity = np.zeros(shape=(0,))
     row_avg = []
     representative_img = None # filename(String)
+    U = None
 
     def __init__(self, path, digit):
         self.path = path
         self.digit = digit
-        self.setDict()
-        self.setMatrix()  
+        self.vectorize_image()
         self.setRowAverage()   
         self.setRepImg()   
+        self.apply_SVD()
 
-    def setDict(self):
-        self.img_dict = create_dictionary(self.path)
-    def setMatrix(self):
-        self.matrix = create_matrix(self.img_dict)
+    def vectorize_image(self):
+        self.img_dict, self.matrix = vectorize_img(self.path)
         self.cos_similarity = analysis_all(self.matrix)
+
     # def show_matrix(self):
     #     generate_html_table(list(self.img_dict.keys), self.cos_similarity)
-    def get_matrix(self):
-        return self
     def setRowAverage(self):
         self.row_avg = np.mean(self.cos_similarity, axis=1)
         self.row_avg = np.round(self.row_avg, 3)
@@ -49,8 +59,16 @@ class DigitMatrix:
         # print(f"Index of representative image for digit {self.digit}: {index}")
         self.representative_img = [list(self.img_dict.keys())[index] for index in indices]
         # print(f"({self.representative_img})")
-  
-        
+    '''
+    A = UΣV^T
+    orthonormal col matrix(rotation) * diagonal matrix(stretch) * orthonormal col matrix(rotation)
+    '''
+    # decompose the matrix into 3 simpler matrices to find pattern within the data 
+    def apply_SVD(self):
+        U, S, VT = np.linalg.svd(self.matrix, full_matrices=False)
+        self.U = U
+        return U, S, VT    
+
 def generate_html_table(DigitMatrix):
     imgs = (list(DigitMatrix.img_dict.keys()))
     html_content = "<table><thead></thead><tbody>"

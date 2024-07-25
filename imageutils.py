@@ -36,6 +36,7 @@ def create_dictionary(dir):
             return img_dict  
         
         for file in os.listdir(dir):
+            # print(f"file:", file)
             create_dict_helper(dir, file, img_dict)         
         return img_dict
     except FileNotFoundError:
@@ -48,6 +49,11 @@ def create_matrix(img_dict):
         # print('Matrix shape:', matrix.shape)
         return matrix
     return None
+    
+def vectorize_img(path):           
+    img_dict = create_dictionary(path)        
+    vectorized_img = create_matrix(img_dict)
+    return img_dict, vectorized_img
 
 # check if size == height * width
 def show_image(img_arr):  

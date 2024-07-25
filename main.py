@@ -1,5 +1,6 @@
 # main executable used to test sample images
 from genutils import parse_cmdline
+from imageutils import vectorize_img
 from matrix import DigitMatrix, DigitMatrices, generate_html_table
 from test import test_image
 import os
@@ -22,10 +23,15 @@ if params_dict:
 
     # if not digitMatrices.matrices['1']:
     #      print('matrix not found')
-    generate_html_table(digitMatrices.matrices['2'])
+    # generate_html_table(digitMatrices.matrices['2'])
     # classify unknown image
     if params_dict['testImage']:
-        test_image(digitMatrices, params_dict['testImage'])
+        # test_image(digitMatrices, params_dict['testImage'])
+        img_dict, test_img = vectorize_img(params_dict['testImage']) # matrix of test imgs
+        digitMatrices.project_to_subspace(img_dict, test_img)
+    
+
+
 else:
     print('returned an empty dictionary')
 
