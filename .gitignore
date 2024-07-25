@@ -5,6 +5,7 @@
 /MNIST_dataset
 /Gray_Images
 /images 
+/Animal
 
 *.pyc
 *.xml

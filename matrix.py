@@ -1,5 +1,7 @@
 import numpy as np
+import os
 from imageutils import vectorize_img
+from genutils import params_dict
 from analysis import analysis_all
 
 class DigitMatrices:
@@ -12,18 +14,31 @@ class DigitMatrices:
         for matrix in self.matrices:
             print(f"Digit: {matrix.digit}")
             print(f"{matrix.cos_similarity}\n\n\n")
-    # project unknown image y onto the subspaces of each object (0-9)
+
+    # project cols of y onto the subspaces of each digit (0-9) then find the subspace with the max projection
     def project_to_subspace(self, img_dict, y):
-        # check if there are multiple test images
-        i = 0
+        num_tests = tests_passed = tests_failed = 0
         if y.shape[1] > 1:
+            i = 0
+            num_tests = tests_passed = tests_failed = 0
+            test_files = list(img_dict.keys())
             for col in np.hsplit(y, y.shape[1]):
-                U_matrices = [matrix.U for matrix in self.matrices.values()] 
-                projections = [np.dot(U.T, col) for U in U_matrices]
-                actual = np.argmax([np.linalg.norm(proj) for proj in projections])
-                # insertion order in img_dict = order of imgs tested
-                print(f"({list(img_dict.keys())[i]:<13}) Actual: {actual} Expected:")
+                test_file = os.path.join(params_dict['testImage'], test_files[i])
+                U_matrices = [matrix.U for matrix in self.matrices.values()] # get subspaces for each digitMatrix object
+                projections = [np.dot(U.T, col) for U in U_matrices] # project y onto the subspaces
+                actual = np.argmax([np.linalg.norm(proj) for proj in projections]) # get the max length of projection
+                expected = os.path.basename(os.path.dirname(test_file))
+                # insertion order in img_dict = order of imgs tested         
+                if(str(actual) == str(expected)):
+                    tests_passed += 1
+                else:
+                    tests_failed += 1
+                    print(f"({test_files[i]:<13}) Result: {actual} Expected: {expected}")
                 i += 1
+                num_tests += 1
+            print(f"Num tests passed: {tests_passed}")
+            print(f"Num tests failed: {tests_failed}")
+            print(f"Accuracy: {(tests_passed / num_tests) * 100}%")
 
 class DigitMatrix:
     digit = None # String
@@ -34,6 +49,8 @@ class DigitMatrix:
     row_avg = []
     representative_img = None # filename(String)
     U = None
+    S = None
+    VT = None
 
     def __init__(self, path, digit):
         self.path = path
@@ -62,11 +79,14 @@ class DigitMatrix:
     '''
     A = UΣV^T
     orthonormal col matrix(rotation) * diagonal matrix(stretch) * orthonormal col matrix(rotation)
+    U = subspace spanned by the cols of matrix A
     '''
     # decompose the matrix into 3 simpler matrices to find pattern within the data 
     def apply_SVD(self):
         U, S, VT = np.linalg.svd(self.matrix, full_matrices=False)
         self.U = U
+        self.S = S
+        self.VT = VT
         return U, S, VT    
 
 def generate_html_table(DigitMatrix):

@@ -26,8 +26,6 @@ def test_image(digitMatrices, test_files):
                 rep_imgs = [digitMatrix.img_dict[rep_img] for rep_img in rep_imgs]
                 cos_similarity = [np.round(analysis_pair(rep_img, test_img), 10) for rep_img in rep_imgs]
                 dict[i] = np.mean(cos_similarity)
-                # show_image(rep_img)
-                # show_image(test_img)
                 # print(f"cos similarity between unknown img and {i}: {cos_similarity}")
             max_similarity = max(dict.values())
             actual = list(dict.values()).index(max_similarity)
