@@ -15,7 +15,7 @@ class DigitMatrices:
             print(f"Digit: {matrix.digit}")
             print(f"{matrix.cos_similarity}\n\n\n")
 
-    # project cols of y onto the subspaces of each digit (0-9) then find the subspace with the max projection
+    # choose W that minimizes the error between AW and y
     def project_to_subspace(self, img_dict, y):
         num_tests = tests_passed = tests_failed = 0
         if y.shape[1] > 1:
@@ -24,16 +24,17 @@ class DigitMatrices:
             test_files = list(img_dict.keys())
             for col in np.hsplit(y, y.shape[1]):
                 test_file = os.path.join(params_dict['testImage'], test_files[i])
-                U_matrices = [matrix.U for matrix in self.matrices.values()] # get subspaces for each digitMatrix object
-                projections = [np.dot(U.T, col) for U in U_matrices] # project y onto the subspaces
-                actual = np.argmax([np.linalg.norm(proj) for proj in projections]) # get the max length of projection
-                expected = os.path.basename(os.path.dirname(test_file))
+                # project test images(col) onto the subspaces spanned by the training images (cols of A) instead of directly projecting to U
+                projections = [np.dot(matrix.pre_computed_matrix, col) for matrix in self.matrices.values()] # = W
+                predicted = np.argmax([np.linalg.norm(proj) for proj in projections]) # get the max length of projection
+                actual = os.path.basename(os.path.dirname(test_file))
+                
                 # insertion order in img_dict = order of imgs tested         
-                if(str(actual) == str(expected)):
+                if(str(predicted) == str(actual)):
                     tests_passed += 1
                 else:
                     tests_failed += 1
-                    print(f"({test_files[i]:<13}) Result: {actual} Expected: {expected}")
+                    print(f"({test_files[i]:<13}) Predicted: {predicted} Actual: {actual}")
                 i += 1
                 num_tests += 1
             print(f"Num tests passed: {tests_passed}")
@@ -51,6 +52,7 @@ class DigitMatrix:
     U = None
     S = None
     VT = None
+    pre_computed_matrix = np.zeros(shape=(0,))
 
     def __init__(self, path, digit):
         self.path = path
@@ -87,7 +89,9 @@ class DigitMatrix:
         self.U = U
         self.S = S
         self.VT = VT
-        return U, S, VT    
+        self.pre_computed_matrix = np.linalg.pinv(U)
+
+           
 
 def generate_html_table(DigitMatrix):
     imgs = (list(DigitMatrix.img_dict.keys()))
