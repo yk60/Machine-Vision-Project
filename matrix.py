@@ -11,9 +11,9 @@ class DigitMatrices:
     def add_object(self, DigitMatrix):
         self.matrices[DigitMatrix.digit] = DigitMatrix
     def printMatrices(self):
-        for matrix in self.matrices:
+        for digit, matrix in self.matrices.items():
             print(f"Digit: {matrix.digit}")
-            print(f"{matrix.cos_similarity}\n\n\n")
+            # print(f"{matrix.cos_similarity}\n\n\n")
 
     # choose W that minimizes the error between AW and y
     def project_to_subspace(self, img_dict, y):
@@ -26,7 +26,8 @@ class DigitMatrices:
                 test_file = os.path.join(params_dict['testImage'], test_files[i])
                 # project test images(col) onto the subspaces spanned by the training images (cols of A) instead of directly projecting to U
                 projections = [np.dot(matrix.pre_computed_matrix, col) for matrix in self.matrices.values()] # = W
-                predicted = np.argmax([np.linalg.norm(proj) for proj in projections]) # get the max length of projection
+                index = np.argmax([np.linalg.norm(proj) for proj in projections]) # get the index of max projection
+                predicted = list(self.matrices.keys())[index]
                 actual = os.path.basename(os.path.dirname(test_file))
                 
                 # insertion order in img_dict = order of imgs tested         
@@ -34,7 +35,7 @@ class DigitMatrices:
                     tests_passed += 1
                 else:
                     tests_failed += 1
-                    print(f"({test_files[i]:<13}) Predicted: {predicted} Actual: {actual}")
+                    print(f"({test_files[i]:<13}) Predicted: {predicted} Actual: {actual} index: {index}")
                 i += 1
                 num_tests += 1
             print(f"Num tests passed: {tests_passed}")
@@ -60,7 +61,7 @@ class DigitMatrix:
         self.vectorize_image()
         self.setRowAverage()   
         self.setRepImg()   
-        self.apply_SVD()
+        self.apply_SVD(0.01, None)
 
     def vectorize_image(self):
         self.img_dict, self.matrix = vectorize_img(self.path)
@@ -83,13 +84,22 @@ class DigitMatrix:
     orthonormal col matrix(rotation) * diagonal matrix(stretch) * orthonormal col matrix(rotation)
     U = subspace spanned by the cols of matrix A
     '''
-    # decompose the matrix into 3 simpler matrices to find pattern within the data 
-    def apply_SVD(self):
+    # decompose the matrix into 3 simpler matrices to reduce dimensionality and find pattern within the data 
+    def apply_SVD(self, threshold_ratio=0.01, max_principal_eigenvectors=None):
         U, S, VT = np.linalg.svd(self.matrix, full_matrices=False)
-        self.U = U
-        self.S = S
-        self.VT = VT
-        self.pre_computed_matrix = np.linalg.pinv(U)
+        principle_eigenvalue = np.max(S)
+        cutoff = threshold_ratio * principle_eigenvalue
+        # find the significant singular values
+        indices = np.where(S >= cutoff)[0]
+        if max_principal_eigenvectors:
+            indices = indices[:max_principal_eigenvectors]
+
+        self.U = U[:, indices] # U = eigenvectors extracted from training img
+        self.S = S[indices]
+        self.VT = VT[indices, :]
+        self.pre_computed_matrix = np.linalg.pinv(self.U)
+        # count of indices that passed the cutoff
+        max_principal_eigenvectors = len(indices)
 
            
 

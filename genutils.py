@@ -3,6 +3,9 @@ from PIL import Image
 
 default_values = {
     'imgSize': (28, 28),
+    'num_classes': 2,
+    'classes': ['0', '1']
+    
 }
 params_dict = {}
 # parse command-line params into a dictionary
@@ -26,6 +29,14 @@ def parse_cmdline(required_params, optional_params):
         if param[0] == 'imgSize':
             param[1] = tuple(int(x.strip())for x in param[1].split(','))
             print(f"param 1 = {param[1]}")
+        if param[0] == 'num_classes':
+            num_classes = int(param[1])
+            if num_classes < 2 or num_classes > 10:
+                print(f"Error: Enter a valid number for num_classes")
+                continue
+        if param[0] == 'classes':
+           param[1]=[x.strip() for x in param[1].split(',')]
+           print(f"classes{param[1]}")
         params_dict[param[0]] = param[1]
 
     for param in required_params:
