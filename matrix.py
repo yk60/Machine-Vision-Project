@@ -25,7 +25,7 @@ class DigitMatrices:
             for col in np.hsplit(y, y.shape[1]):
                 test_file = os.path.join(params_dict['testImage'], test_files[i])
                 # project test images(col) onto the subspaces spanned by the training images (cols of A) instead of directly projecting to U
-                projections = [np.dot(matrix.pre_computed_matrix, col) for matrix in self.matrices.values()] # = W
+                projections = [np.dot(matrix.embedding_matrix, col) for matrix in self.matrices.values()] # = W                                   
                 index = np.argmax([np.linalg.norm(proj) for proj in projections]) # get the index of max projection
                 predicted = list(self.matrices.keys())[index]
                 actual = os.path.basename(os.path.dirname(test_file))
@@ -35,7 +35,7 @@ class DigitMatrices:
                     tests_passed += 1
                 else:
                     tests_failed += 1
-                    print(f"({test_files[i]:<13}) Predicted: {predicted} Actual: {actual} index: {index}")
+                    print(f"({test_files[i]:<13})Predicted: {predicted} Actual: {actual}")
                 i += 1
                 num_tests += 1
             print(f"Num tests passed: {tests_passed}")
@@ -54,6 +54,7 @@ class DigitMatrix:
     S = None
     VT = None
     pre_computed_matrix = np.zeros(shape=(0,))
+    embedding_matrix = np.zeros(shape=(0,))
 
     def __init__(self, path, digit):
         self.path = path
@@ -89,18 +90,17 @@ class DigitMatrix:
         U, S, VT = np.linalg.svd(self.matrix, full_matrices=False)
         principle_eigenvalue = np.max(S)
         cutoff = threshold_ratio * principle_eigenvalue
-        # find the significant singular values
+        # use cutoff to find the indices of significant singular values (eigenvectors)
         indices = np.where(S >= cutoff)[0]
         if max_principal_eigenvectors:
             indices = indices[:max_principal_eigenvectors]
-
-        self.U = U[:, indices] # U = eigenvectors extracted from training img
-        self.S = S[indices]
-        self.VT = VT[indices, :]
-        self.pre_computed_matrix = np.linalg.pinv(self.U)
+        self.U = U[:, indices] # U = eigenvectors of subspace spanned by cols of A
+        self.S = S[indices] # S = singular value
+        self.VT = VT[indices, :] # VT = MT*M
+        self.pre_computed_matrix = np.linalg.pinv(self.U) #  pseudoinverse of U
         # count of indices that passed the cutoff
         max_principal_eigenvectors = len(indices)
-
+        self.embedding_matrix = np.dot(self.U, self.pre_computed_matrix)  # U*UT
            
 
 def generate_html_table(DigitMatrix):

@@ -17,7 +17,7 @@ if params_dict:
 
     # if user selected the number of classes(subdirs)
     
-    for object in sorted(params_dict['classes']):
+    for object in params_dict['classes']:
         subdir = object
         folder = os.path.join(dir, subdir)
         print(f"folder:{folder}")
