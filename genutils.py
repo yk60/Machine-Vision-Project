@@ -4,8 +4,7 @@ from PIL import Image
 default_values = {
     'imgSize': (28, 28),
     'num_classes': 2,
-    'classes': ['0', '1']
-    
+    'classes': ['0', '1']    
 }
 params_dict = {}
 # parse command-line params into a dictionary
@@ -47,13 +46,4 @@ def parse_cmdline(required_params, optional_params):
         if param not in params_dict:
             params_dict[param] = default_value
             print(f"assigned default value for {param}")
-
     return params_dict   
-
-# def main():
-#     params_dict = parse_cmdline(['filePath', 'fileType'])
-#     if params_dict:
-#         print(params_dict)
-
-# if __name__ == "__main__":
-#     main()

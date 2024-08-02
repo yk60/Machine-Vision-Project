@@ -9,31 +9,27 @@ import time
 start_time = time.time()
 # build model
 optional_params = ['imgSize', 'num_classes', 'classes']
-required_params = ['filePath'] # add more
+required_params = ['filePath', 'testImage'] # add more
 params_dict = parse_cmdline(required_params, optional_params)
 if params_dict:
     dir = params_dict['filePath']
     digitMatrices = DigitMatrices()
 
-    # if user selected the number of classes(subdirs)
-    
+    # train model
     for object in params_dict['classes']:
-        subdir = object
-        folder = os.path.join(dir, subdir)
-        print(f"folder:{folder}")
-        obj = DigitMatrix(folder, subdir)
-        digitMatrices.add_object(obj)
-    digitMatrices.printMatrices()
-
-
-    # if not digitMatrices.matrices['1']:
-    #      print('matrix not found')
-    # generate_html_table(digitMatrices.matrices['2'])
-    # classify unknown image
-    if params_dict['testImage']:
+        folder = os.path.join(dir, object)
+        digitMatrix = DigitMatrix(folder, object)
+        digitMatrices.add_object(digitMatrix)
+    # test model
+    for object in params_dict['classes']:      
+        testImgs = os.path.join(params_dict['testImage'], object)
         # test_image(digitMatrices, params_dict['testImage'])
-        img_dict, test_img = vectorize_img(params_dict['testImage']) # matrix of test imgs
-        digitMatrices.project_to_subspace(img_dict, test_img)
+        img_dict, test_img = vectorize_img(testImgs) # matrix of test imgs
+        digitMatrices.project_to_subspace(img_dict, test_img, object)
+    # digitMatrices.printMatrices()
+
+    # generate_html_table(digitMatrices.matrices['3'])
+   
     
 
 

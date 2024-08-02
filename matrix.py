@@ -3,7 +3,16 @@ import os
 from imageutils import vectorize_img
 from genutils import params_dict
 from analysis import analysis_all
+imageNet_dict = {
+    '00153': 'Maltese',
+    '00200': 'Tibetan terrier',
+    '00229': 'Old English sheepdog',
+    '00281': 'Tabby cat',
+    '00282': 'Tiger cat',
+    '00283': 'Persian cat',
+    '00284': 'Siamese cat',
 
+}
 class DigitMatrices:
     matrices = {}
     def __init__(self):
@@ -14,21 +23,26 @@ class DigitMatrices:
         for digit, matrix in self.matrices.items():
             print(f"Digit: {matrix.digit}")
             # print(f"{matrix.cos_similarity}\n\n\n")
-
+    def getClassName(self, predicted, actual):
+        predicted = imageNet_dict.get(predicted, predicted)
+        actual = imageNet_dict.get(actual, actual)
+        return predicted, actual
     # choose W that minimizes the error between AW and y
-    def project_to_subspace(self, img_dict, y):
+    def project_to_subspace(self, img_dict, y, object):
         num_tests = tests_passed = tests_failed = 0
         if y.shape[1] > 1:
             i = 0
             num_tests = tests_passed = tests_failed = 0
             test_files = list(img_dict.keys())
             for col in np.hsplit(y, y.shape[1]):
-                test_file = os.path.join(params_dict['testImage'], test_files[i])
+                test_file = os.path.join(params_dict['testImage'], object, test_files[i])
                 # project test images(col) onto the subspaces spanned by the training images (cols of A) instead of directly projecting to U
                 projections = [np.dot(matrix.embedding_matrix, col) for matrix in self.matrices.values()] # = W                                   
                 index = np.argmax([np.linalg.norm(proj) for proj in projections]) # get the index of max projection
                 predicted = list(self.matrices.keys())[index]
                 actual = os.path.basename(os.path.dirname(test_file))
+                if 'ImageNet' in params_dict['filePath']:
+                    predicted, actual = self.getClassName(predicted, actual)
                 
                 # insertion order in img_dict = order of imgs tested         
                 if(str(predicted) == str(actual)):
