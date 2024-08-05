@@ -1,6 +1,13 @@
 import sys
 from PIL import Image
-
+mnist_dict = {
+    'filePath': ['MNIST_JPG/MNIST_JPG/trainingSet'],
+    'testImage': 'MNIST_JPG/MNIST_JPG/testingSet'
+}
+imageNet_dict = {
+    'filePath': ['ImageNet/ImageNet-10k-0', 'ImageNet/ImageNet-10k-2'],
+    'testImage': 'ImageNet/TestSet'
+}
 default_values = {
     'imgSize': (28, 28),
     'num_classes': 2,
@@ -11,20 +18,21 @@ params_dict = {}
 def parse_cmdline(required_params, optional_params):
     params = sys.argv[1:]
     if '--help' in params:
-        print(f"Enter parameters for {sys.argv[0]}:", end="(")
-        # print('-test: Enter the path to the image to vectorize')
+        print("Select a dataset [MNIST] or [ImageNet] and class objects")
+        print(f"Enter parameters for {sys.argv[0]}:", end="")
         for param in required_params:
-            print(f"{param}=", end=" ")
-        print(')')      
+            print(f"{param}", end=" ")
+        print('\n')
         return {}      
     
     for param in params:
         param = param.split('=')
-        if not param[1] and param[0] in optional_params:
-            break
-        if not param[1] and param[0] in required_params:
+        if param[0] and not param[1]:
             print(f"Error: Enter the value for {param[0]}.")
-            return {}
+            return {}            
+        if param[0] == 'dataSet' and param[1].lower() != 'mnist' and param[1].lower() != 'imagenet':
+            print(f"Enter a valid dataset name")
+            break
         if param[0] == 'imgSize':
             param[1] = tuple(int(x.strip())for x in param[1].split(','))
             print(f"param 1 = {param[1]}")
