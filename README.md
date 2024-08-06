@@ -14,3 +14,7 @@ python main.py dataSet=MNIST classes="0,1" imgSize=28,28
 
 python main.py dataSet=ImageNet classes="00153,00284" imgSize=28,28
 ```
+#### Run the unit tests
+```
+python test.py
+```

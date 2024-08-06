@@ -42,8 +42,7 @@ def parse_cmdline(required_params, optional_params):
                 print(f"Error: Enter a valid number for num_classes")
                 continue
         if param[0] == 'classes':
-           param[1]=[x.strip() for x in param[1].split(',')]
-           print(f"classes{param[1]}")
+           param[1] = [x.strip() for x in param[1].split(',')]
         params_dict[param[0]] = param[1]
 
     for param in required_params:
