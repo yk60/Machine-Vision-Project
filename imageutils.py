@@ -49,7 +49,7 @@ def create_matrix(img_dict):
         # print('Matrix shape:', matrix.shape)
         return matrix
     return None
-    
+# vectorize images from a single path
 def vectorize_img(path):           
     img_dict = create_dictionary(path)        
     vectorized_img = create_matrix(img_dict)

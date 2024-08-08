@@ -13,4 +13,5 @@
 *.xml
 
 .idea/
-index.html
+*.html
+style.css
