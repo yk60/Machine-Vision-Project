@@ -1,0 +1,84 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+body {
+    background-color: #eee;
+}
+.wrapper{
+    background-color: #4b95ea;
+    margin: 0 auto;
+    width: 1000px;
+}
+nav {
+    width: 100%;
+    height: 100px;
+    background-color: #fff;
+}
+/*style the entire navigation */
+ul {
+    margin-left: 60px;
+    /* position: relative; */
+}
+/*style the list items inside unordered list */
+ul li {
+    list-style: none;
+    display: inline-block;
+    float: left;
+    line-height: 100px;
+}
+/* style the a tag inside li inisde ul*/
+ul li a {
+    display: block;
+    text-decoration: none;
+    font-size: 14px;
+    font-family: arial;
+    color: #1e1e1e;
+    padding: 0 20px;
+}
+ul li a:hover {
+    color: red;
+
+}
+form {
+    margin: 0 auto;
+    width: 1000px; 
+
+    box-sizing: border-box;
+    padding: 2rem;
+    border-radius: 1rem;
+    background-color: hsl(0, 0%, 100%);
+    border: 4px solid hsl(0, 0%, 90%);
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: flex-start;
+    align-content: flex-start;
+    
+}
+form #MNIST_classes {
+    width: 120px; 
+}
+form #ImageNet_classes {
+    width: 600px
+}
+fieldset {
+    border: 3px solid #eee;
+}
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+table, th, td {
+    border: 1px solid black;
+}
+th, td {
+    padding: 10px;
+    text-align: center;
+}
+img {
+    max-width: 100px;
+    height: auto;
+}

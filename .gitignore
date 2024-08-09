@@ -13,5 +13,4 @@
 *.xml
 
 .idea/
-*.html
-style.css
+table.html
