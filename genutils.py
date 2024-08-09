@@ -35,7 +35,6 @@ def parse_cmdline(required_params, optional_params):
             break
         if param[0] == 'imgSize':
             param[1] = tuple(int(x.strip())for x in param[1].split(','))
-            print(f"param 1 = {param[1]}")
         if param[0] == 'num_classes':
             num_classes = int(param[1])
             if num_classes < 2 or num_classes > 10:
@@ -43,6 +42,10 @@ def parse_cmdline(required_params, optional_params):
                 continue
         if param[0] == 'classes':
            param[1] = [x.strip() for x in param[1].split(',')]
+        if param[0] == 'threshold_ratio':
+            param[1] = float(param[1])
+        if param[0] == 'max_eigenvector':
+            param[1] = int(param[1])
         params_dict[param[0]] = param[1]
 
     for param in required_params:

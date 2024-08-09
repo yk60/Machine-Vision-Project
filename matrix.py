@@ -55,14 +55,15 @@ class DigitMatrices:
                     tests_passed += 1
                 else:
                     tests_failed += 1
-                    print(f"({test_files[i]:<13})Predicted: {predicted} Actual: {actual}")
+                    # print(f"({test_files[i]:<13})Predicted: {predicted} Actual: {actual}")
                 i += 1
                 num_tests += 1
             accuracy = np.round((tests_passed / num_tests) * 100, 2)
+            print(f"Selected classes: {[matrix.digit for matrix in self.matrices.values()]} Classify: {actual}")
             print(f"Num tests passed: {tests_passed}")
             print(f"Num tests failed: {tests_failed}")
             print(f"Accuracy: {accuracy}%\n")
-            print(f"{object} projected onto {[matrix.digit for matrix in self.matrices.values()]}")
+            # print(f"{object} projected onto {[matrix.digit for matrix in self.matrices.values()]}")
             return accuracy
 
 class DigitMatrix:
@@ -87,7 +88,7 @@ class DigitMatrix:
         self.setRepImg()   
         # self.apply_SVD(0.18, None)
         # self.apply_SVD(0.2, None)
-        self.apply_SVD(0.01, 10)
+        self.apply_SVD(params_dict.get('threshold_ratio', 0.01), params_dict.get('max_eigenvector', 10))
         # 0.95, 10
 
         # self.apply_SVD(0.01, None)
@@ -124,6 +125,7 @@ class DigitMatrix:
     '''
     # decompose the matrix into 3 simpler matrices to reduce dimensionality and find pattern within the data 
     def apply_SVD(self, threshold_ratio=0.01, max_principal_eigenvectors=None):
+        print(threshold_ratio)
         U, S, VT = np.linalg.svd(self.matrix, full_matrices=False)
         principle_eigenvalue = np.max(S)
         cutoff = threshold_ratio * principle_eigenvalue
@@ -177,6 +179,34 @@ def generate_html_table(DigitMatrix):
 
     with open('table.html', 'w') as html_file:
         html_file.write(updated_html_content)
+
+def get_imageNet_classes():
+    dir = 'ImageNet/ImageNet1000_labels.txt'
+    with open(dir, 'r') as file:
+        html_content = ''
+        # <option value="class">Maltese</option>
+        labels_dict = eval(file.read())
+        print(type(file.read()))
+        print(type(labels_dict))
+        for key, value in labels_dict.items():
+            html_content += '<option value="class">'
+            html_content += f"{str(key).rjust(5, '0')} {value}"
+            html_content += '</option> \n'
+            if int(key) == 500:
+                break
+    with open('index.html', 'r') as html_file:
+        index_html_content = html_file.read()
+
+    start_marker = "<!-- Start of ImageNet select -->"
+    end_marker = "<!-- End of ImageNet select -->"
+
+    start_content = index_html_content.split(start_marker)[0] + start_marker
+    end_content = end_marker + index_html_content.split(end_marker)[1]
+    updated_html_content = start_content + html_content + end_content
+
+    with open('index.html', 'w') as html_file:
+        html_file.write(updated_html_content)
+
 
 # apply PCA for dimension reduction then create a scatter plot of the embeddings in 2d and 3d plane
 def visualize_embeddings_pca(embedding_matrices, digits):

@@ -12,7 +12,7 @@
 ```
 python main.py dataSet=MNIST classes="0,1" imgSize=28,28
 
-python main.py dataSet=ImageNet classes="00153,00284" imgSize=28,28
+python main.py dataSet=ImageNet classes="00153,00284" imgSize=28,28 threshold_ratio=0.5
 ```
 #### Run the unit tests
 ```
