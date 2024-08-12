@@ -167,7 +167,7 @@ def generate_html_table(DigitMatrix):
     html_content += "</tbody></table>"
 
     # insert html_content(table) into placeholders in index.html
-    with open('table.html', 'r') as html_file:
+    with open('templates/table.html', 'r') as html_file:
         index_html_content = html_file.read()
     start_marker = "<!-- Start of table -->"
     end_marker = "<!-- End of table -->"
@@ -177,24 +177,22 @@ def generate_html_table(DigitMatrix):
     updated_html_content = start_content + html_content + end_content
 
 
-    with open('table.html', 'w') as html_file:
+    with open('templates/table.html', 'w') as html_file:
         html_file.write(updated_html_content)
 
 def get_imageNet_classes():
     dir = 'ImageNet/ImageNet1000_labels.txt'
     with open(dir, 'r') as file:
         html_content = ''
-        # <option value="class">Maltese</option>
+        # <option value="00000">Maltese</option>
         labels_dict = eval(file.read())
         print(type(file.read()))
         print(type(labels_dict))
         for key, value in labels_dict.items():
-            html_content += '<option value="class">'
-            html_content += f"{str(key).rjust(5, '0')} {value}"
-            html_content += '</option> \n'
+            html_content += f'<option value="{str(key).rjust(5, "0")}">{value}</option> \n'
             if int(key) == 500:
                 break
-    with open('index.html', 'r') as html_file:
+    with open('templates/index.html', 'r') as html_file:
         index_html_content = html_file.read()
 
     start_marker = "<!-- Start of ImageNet select -->"
@@ -204,7 +202,7 @@ def get_imageNet_classes():
     end_content = end_marker + index_html_content.split(end_marker)[1]
     updated_html_content = start_content + html_content + end_content
 
-    with open('index.html', 'w') as html_file:
+    with open('templates/index.html', 'w') as html_file:
         html_file.write(updated_html_content)
 
 

@@ -1,7 +1,7 @@
 # main executable used to test sample images
 from genutils import parse_cmdline, mnist_dict, imageNet_dict
 from imageutils import vectorize_img
-from matrix import DigitMatrix, DigitMatrices, generate_html_table, visualize_embeddings_pca, visualize_embeddings_pca_3d
+from matrix import DigitMatrix, DigitMatrices, generate_html_table, get_imageNet_classes, visualize_embeddings_pca, visualize_embeddings_pca_3d
 from test import test_image
 import os
 import time
@@ -30,7 +30,7 @@ if params_dict:
         # test_image(digitMatrices, params_dict['testImage'])
         img_dict, test_img = vectorize_img(testImgs) # matrix of test imgs
         digitMatrices.project_to_subspace(img_dict, test_img, object)
-    digitMatrices.printMatrices()
+    # digitMatrices.printMatrices()
     visualize_embeddings_pca([matrix.embedding_matrix for matrix in digitMatrices.matrices.values()], [matrix.digit for matrix in digitMatrices.matrices.values()])
     visualize_embeddings_pca_3d([matrix.embedding_matrix for matrix in digitMatrices.matrices.values()], [matrix.digit for matrix in digitMatrices.matrices.values()])
     # generate_html_table(digitMatrices.matrices['3'])
@@ -39,6 +39,7 @@ else:
 
 end_time = time.time()
 print(f"Execution time: {end_time - start_time} seconds")
+get_imageNet_classes()
          
     
          
