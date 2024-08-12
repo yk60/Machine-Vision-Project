@@ -7,7 +7,6 @@ from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-
 imageNet_dict = {
     '00153': 'Maltese',
     '00200': 'Tibetan terrier',
@@ -35,6 +34,7 @@ class DigitMatrices:
     # choose W that minimizes the error between AW and y
     def project_to_subspace(self, img_dict, y, object):
         num_tests = tests_passed = tests_failed = 0
+        failed_tests = []
         if y.shape[1] > 1:
             i = 0
             num_tests = tests_passed = tests_failed = 0
@@ -55,6 +55,7 @@ class DigitMatrices:
                     tests_passed += 1
                 else:
                     tests_failed += 1
+                    failed_tests.append([test_file, predicted, actual])
                     # print(f"({test_files[i]:<13})Predicted: {predicted} Actual: {actual}")
                 i += 1
                 num_tests += 1
@@ -64,7 +65,7 @@ class DigitMatrices:
             print(f"Num tests failed: {tests_failed}")
             print(f"Accuracy: {accuracy}%\n")
             # print(f"{object} projected onto {[matrix.digit for matrix in self.matrices.values()]}")
-            return accuracy
+            return failed_tests, accuracy
 
 class DigitMatrix:
     digit = None # String
@@ -125,7 +126,7 @@ class DigitMatrix:
     '''
     # decompose the matrix into 3 simpler matrices to reduce dimensionality and find pattern within the data 
     def apply_SVD(self, threshold_ratio=0.01, max_principal_eigenvectors=None):
-        print(threshold_ratio)
+        # print(threshold_ratio)
         U, S, VT = np.linalg.svd(self.matrix, full_matrices=False)
         principle_eigenvalue = np.max(S)
         cutoff = threshold_ratio * principle_eigenvalue
@@ -155,56 +156,41 @@ def generate_html_table(DigitMatrix):
     html_content += "</tr>"
     i = 0
     for row in DigitMatrix.cos_similarity:
-        html_content += "<tr>"
-        html_content += f'<th scope="row"><img src="{DigitMatrix.path}/{imgs[i]}" alt="Image"></th>\n'
+        html_content += f'<tr><th scope="row"><img src="{DigitMatrix.path}/{imgs[i]}" alt="Image"></th>\n'
         for entry in row:
             html_content += f"<td>{entry}</td>"
-        html_content += f"<td>{DigitMatrix.row_avg[i]}</td>"
-        html_content += "</tr>"
-        i+=1
-            
-    # Closing HTML structure
+        html_content += f"<td>{DigitMatrix.row_avg[i]}</td></tr>"
+        i+=1            
     html_content += "</tbody></table>"
+    insert_to_html('table.html', html_content, "<!-- Start of table -->", "<!-- End of table -->")
 
-    # insert html_content(table) into placeholders in index.html
-    with open('templates/table.html', 'r') as html_file:
-        index_html_content = html_file.read()
-    start_marker = "<!-- Start of table -->"
-    end_marker = "<!-- End of table -->"
-
-    start_content = index_html_content.split(start_marker)[0] + start_marker
-    end_content = end_marker + index_html_content.split(end_marker)[1]
-    updated_html_content = start_content + html_content + end_content
-
-
-    with open('templates/table.html', 'w') as html_file:
-        html_file.write(updated_html_content)
+def generate_failed_tests_table(failed_tests):
+    html_content = "<table><thead><tr><th>Image</th><th>File</th><th>Predicted class</th><th>Actual class</th></tr></thead><tbody>"
+    for test_file in failed_tests:
+        html_content += f'<tr><td><img src="{test_file[0]}" alt="Failed Image"></td>'
+        html_content += f'<td>{os.path.basename(test_file[0])}</td><td>{test_file[1]}</td><td>{test_file[2]}</td></tr>'
+    html_content += "</tbody></table>"
+    insert_to_html('result.html', html_content, "<!-- Start of table -->", "<!-- End of table -->")
 
 def get_imageNet_classes():
     dir = 'ImageNet/ImageNet1000_labels.txt'
     with open(dir, 'r') as file:
         html_content = ''
-        # <option value="00000">Maltese</option>
         labels_dict = eval(file.read())
-        print(type(file.read()))
-        print(type(labels_dict))
         for key, value in labels_dict.items():
             html_content += f'<option value="{str(key).rjust(5, "0")}">{value}</option> \n'
             if int(key) == 500:
                 break
-    with open('templates/index.html', 'r') as html_file:
+    insert_to_html('index.html', html_content,"<!-- Start of ImageNet select -->", "<!-- End of ImageNet select -->")
+
+def insert_to_html(file, html_content, start_marker, end_marker):
+    with open(file, 'r') as html_file:
         index_html_content = html_file.read()
-
-    start_marker = "<!-- Start of ImageNet select -->"
-    end_marker = "<!-- End of ImageNet select -->"
-
     start_content = index_html_content.split(start_marker)[0] + start_marker
     end_content = end_marker + index_html_content.split(end_marker)[1]
     updated_html_content = start_content + html_content + end_content
-
-    with open('templates/index.html', 'w') as html_file:
+    with open(file, 'w') as html_file:
         html_file.write(updated_html_content)
-
 
 # apply PCA for dimension reduction then create a scatter plot of the embeddings in 2d and 3d plane
 def visualize_embeddings_pca(embedding_matrices, digits):

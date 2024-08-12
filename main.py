@@ -1,7 +1,7 @@
 # main executable used to test sample images
 from genutils import parse_cmdline, mnist_dict, imageNet_dict
 from imageutils import vectorize_img
-from matrix import DigitMatrix, DigitMatrices, generate_html_table, get_imageNet_classes, visualize_embeddings_pca, visualize_embeddings_pca_3d
+from matrix import DigitMatrix, DigitMatrices, generate_html_table, generate_failed_tests_table, get_imageNet_classes, visualize_embeddings_pca, visualize_embeddings_pca_3d
 from test import test_image
 import os
 import time
@@ -25,15 +25,18 @@ if params_dict:
         digitMatrices.add_object(digitMatrix)
     
     # test model
+    temp = []
     for object in params_dict['classes']:      
         testImgs = os.path.join(params_dict['testImage'], object)
         # test_image(digitMatrices, params_dict['testImage'])
         img_dict, test_img = vectorize_img(testImgs) # matrix of test imgs
-        digitMatrices.project_to_subspace(img_dict, test_img, object)
+        failed_tests, accuracy = digitMatrices.project_to_subspace(img_dict, test_img, object)
+        temp += failed_tests
+    generate_failed_tests_table(temp)
     # digitMatrices.printMatrices()
-    visualize_embeddings_pca([matrix.embedding_matrix for matrix in digitMatrices.matrices.values()], [matrix.digit for matrix in digitMatrices.matrices.values()])
-    visualize_embeddings_pca_3d([matrix.embedding_matrix for matrix in digitMatrices.matrices.values()], [matrix.digit for matrix in digitMatrices.matrices.values()])
-    # generate_html_table(digitMatrices.matrices['3'])
+    # visualize_embeddings_pca([matrix.embedding_matrix for matrix in digitMatrices.matrices.values()], [matrix.digit for matrix in digitMatrices.matrices.values()])
+    # visualize_embeddings_pca_3d([matrix.embedding_matrix for matrix in digitMatrices.matrices.values()], [matrix.digit for matrix in digitMatrices.matrices.values()])
+    # generate_html_table(digitMatrices.matrices['0'])
 else:
     print('returned an empty dictionary')
 

@@ -47,7 +47,7 @@ class TestModel(unittest.TestCase):
                 testImgs = os.path.join(params_dict['testImage'], object)
                 img_dict, test_img = vectorize_img(testImgs) # matrix of test imgs
                 
-                accuracy = digitMatrices.project_to_subspace(img_dict, test_img, object)
+                failed_tests, accuracy = digitMatrices.project_to_subspace(img_dict, test_img, object)
 
                 # if accuracy < 70:
                 #     # raise AssertionError(f"Accuracy is below 70%: {accuracy}%")
