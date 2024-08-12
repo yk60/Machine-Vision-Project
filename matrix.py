@@ -70,6 +70,7 @@ class DigitMatrices:
 class DigitMatrix:
     digit = None # String
     path = ""
+    paths = []
     img_dict = {}
     matrix = np.zeros(shape=(0,))
     cos_similarity = np.zeros(shape=(0,))
@@ -145,18 +146,18 @@ class DigitMatrix:
 
 def generate_html_table(DigitMatrix):
     imgs = (list(DigitMatrix.img_dict.keys()))
-    html_content = "<table><thead></thead><tbody>"
+    html_content = '<table id="cos_similarity_table"><thead></thead><tbody>'
     # Iterate through cosine similarity matrix to populate table rows
 
     html_content += "<tr>"
     html_content += "<td>""</td>"
     for img in imgs:
-        html_content += f'<td><img src="{DigitMatrix.path}/{img}" alt="Image"></td>'
+        html_content += f'<td><img src="{DigitMatrix.paths[0]}/{img}" alt="Image"></td>'
     html_content += f'<td>Row Average</td>'
     html_content += "</tr>"
     i = 0
     for row in DigitMatrix.cos_similarity:
-        html_content += f'<tr><th scope="row"><img src="{DigitMatrix.path}/{imgs[i]}" alt="Image"></th>\n'
+        html_content += f'<tr><th scope="row"><img src="{DigitMatrix.paths[0]}/{imgs[i]}" alt="Image"></th>\n'
         for entry in row:
             html_content += f"<td>{entry}</td>"
         html_content += f"<td>{DigitMatrix.row_avg[i]}</td></tr>"
@@ -165,7 +166,7 @@ def generate_html_table(DigitMatrix):
     insert_to_html('table.html', html_content, "<!-- Start of table -->", "<!-- End of table -->")
 
 def generate_failed_tests_table(failed_tests):
-    html_content = "<table><thead><tr><th>Image</th><th>File</th><th>Predicted class</th><th>Actual class</th></tr></thead><tbody>"
+    html_content = '<table id="tests_failed_table"><thead><tr><th>Image</th><th>File</th><th>Predicted class</th><th>Actual class</th></tr></thead><tbody>'
     for test_file in failed_tests:
         html_content += f'<tr><td><img src="{test_file[0]}" alt="Failed Image"></td>'
         html_content += f'<td>{os.path.basename(test_file[0])}</td><td>{test_file[1]}</td><td>{test_file[2]}</td></tr>'
@@ -183,6 +184,7 @@ def get_imageNet_classes():
                 break
     insert_to_html('index.html', html_content,"<!-- Start of ImageNet select -->", "<!-- End of ImageNet select -->")
 
+# do template rendering, insert html content into placeholders in html file
 def insert_to_html(file, html_content, start_marker, end_marker):
     with open(file, 'r') as html_file:
         index_html_content = html_file.read()

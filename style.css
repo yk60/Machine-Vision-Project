@@ -4,16 +4,22 @@
 }
 body {
     background-color: #eee;
+    padding-top: 100px;
 }
 .wrapper{
-    background-color: #4b95ea;
     margin: 0 auto;
-    width: 1000px;
+    width: 100%;
+    max-width: 1000px;
+    overflow-x: auto;
 }
 nav {
     width: 100%;
     height: 100px;
-    background-color: #fff;
+    background-color: #405D72;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
 }
 /*style the entire navigation */
 ul {
@@ -31,9 +37,9 @@ ul li {
 ul li a {
     display: block;
     text-decoration: none;
-    font-size: 14px;
+    font-size: 13px;
     font-family: arial;
-    color: #1e1e1e;
+    color: #fff;
     padding: 0 20px;
 }
 ul li a:hover {
@@ -72,7 +78,10 @@ table {
     border-collapse: collapse;
 }
 table, th, td {
-    border: 1px solid black;
+    border: 1px solid lightgrey;
+}
+table td {
+    background-color: #fff;
 }
 th, td {
     padding: 10px;
@@ -81,4 +90,33 @@ th, td {
 img {
     max-width: 100px;
     height: auto;
+}
+#cos_similarity_table tr th {
+    background-color: #fff;
+}
+#tests_failed_table {
+    width: 100%;
+    height: 100px;
+    /* width: auto;  */
+    
+    border-collapse: collapse; /* Remove the space between table cells */
+    margin: 0 auto; /* Center the table */
+}
+
+#tests_failed_table img {
+    height: 40px; /* Set a uniform height for images */
+    width: auto; /* Maintain aspect ratio */
+}
+#tests_failed_table thead th {
+    background-color: #758694; /* Set the background color to white */
+}
+#tests_failed_table tr {
+    height: 50px; /* Set a uniform height for rows */
+}
+#tests_failed_table td:nth-last-child(2) {
+    color: red; /* Style the second-to-last column text as red */
+}
+
+#tests_failed_table td:last-child {
+    color: green; /* Style the last column text as green */
 }

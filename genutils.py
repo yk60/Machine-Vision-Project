@@ -1,7 +1,8 @@
 import sys
 from PIL import Image
 mnist_dict = {
-    'filePath': ['MNIST_JPG/MNIST_JPG/trainingSet'],
+    # 'filePath': ['MNIST_JPG/MNIST_JPG/trainingSet'],
+    'filePath': ['MNIST/trainingSample/trainingSample'],
     'testImage': 'MNIST_JPG/MNIST_JPG/testingSet'
 }
 imageNet_dict = {

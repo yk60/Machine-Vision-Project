@@ -13,6 +13,5 @@
 *.xml
 
 .idea/
-table.html
 result.html
 app.py
