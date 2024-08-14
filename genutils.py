@@ -1,8 +1,9 @@
 import sys
-from PIL import Image
+
 mnist_dict = {
+    # path to the training images of a smaller mnist dataset
+    # 'filePath': ['MNIST/trainingSample/trainingSample'], 
     'filePath': ['MNIST_JPG/MNIST_JPG/trainingSet'],
-    # 'filePath': ['MNIST/trainingSample/trainingSample'],
     'testImage': 'MNIST_JPG/MNIST_JPG/testingSet'
 }
 imageNet_dict = {
@@ -14,7 +15,7 @@ default_values = {
     'threshold_ratio': 0.01
 }
 params_dict = {}
-# parse command-line params into a dictionary
+# parse command-line parameters and save them into a dictionary
 def parse_cmdline(required_params, optional_params):
     params = sys.argv[1:]
     if not params or'--help' in params:
@@ -33,11 +34,12 @@ def parse_cmdline(required_params, optional_params):
                 print(f"assigned default value for {param}, {default_values[param]}")   
     else:
         for param in params:
-            key, value = param.split('=')
-            if key and not value:
-                print(f"Error: Enter the value for {key}.")
-                return {}
-            params_dict[key] = value
+            if '=' in param:
+                key, value = param.split('=')
+                params_dict[key] = value
+            else:
+                print(f"Warning: Missing the value for {param}")
+            
 
     for param in required_params:
         if param not in params_dict:
@@ -49,10 +51,10 @@ def parse_cmdline(required_params, optional_params):
             print(f"assigned default value for {param}, {default_values[param]}")
     validate_input(params_dict)
             
-    print(f"Selected parameters: {params_dict}\n")
+    print(f"Input: {params_dict}\n")
     return params_dict 
 
-# validates each parameter and convert them into the accepted format
+# validate each parameter and convert them into the accepted format
 def validate_input(params_dict):
     for key, value in params_dict.items():         
         if key == 'dataSet' and value.lower() != 'mnist' and value.lower() != 'imagenet':

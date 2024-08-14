@@ -19,7 +19,7 @@ Enter value for threshold_ratio: 0.01
 
 python main.py
 Enter value for dataSet: imagenet
-Enter value for classes: 00153,00284
+Enter value for classes: 00153,00283
 Enter value for imgSize: 100,100
 Enter value for threshold_ratio: 0.01
 
@@ -28,7 +28,7 @@ Method 2
 ```
 python main.py dataSet=mnist classes=0,1 imgSize="28,28" threshold_ratio=0.01
 
-python main.py dataSet=ImageNet classes="00153,00284" imgSize="100,100" threshold_ratio=0.01
+python main.py dataSet=ImageNet classes="00153,00283" imgSize="100,100" threshold_ratio=0.01
 ```
 
 #### Run the unit tests

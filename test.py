@@ -1,9 +1,7 @@
-# Use the model to classify the unknown image into the digit 0-9
+# unit tests
 import unittest
-import matplotlib.pyplot as plt
 import numpy as np
 import unittest
-import sys
 import os
 from unittest.mock import patch
 from genutils import parse_cmdline, params_dict, mnist_dict, imageNet_dict
@@ -40,18 +38,16 @@ class TestModel(unittest.TestCase):
             digitMatrices = DigitMatrices() 
 
             for object in params_dict['classes']:
-                    paths = [os.path.join(dir, object) for dir in params_dict['filePath']]
-                    digitMatrix = DigitMatrix(paths, object)
-                    digitMatrices.add_object(digitMatrix)
+                paths = [os.path.join(dir, object) for dir in params_dict['filePath']]
+                digitMatrix = DigitMatrix(paths, object)
+                digitMatrices.add_object(digitMatrix)
             for object in params_dict['classes']:      
                 testImgs = os.path.join(params_dict['testImage'], object)
                 img_dict, test_img = vectorize_img(testImgs) # matrix of test imgs
                 
                 failed_tests, accuracy = digitMatrices.project_to_subspace(img_dict, test_img, object)
-
-                # if accuracy < 70:
-                #     # raise AssertionError(f"Accuracy is below 70%: {accuracy}%")
-                #     print(f"TEST FAILED-----------------------")
+                if accuracy < 70:
+                    raise AssertionError(f"Accuracy is below 70%: {accuracy}%")
             digitMatrices = None
                 
     @patch('sys.argv', ['main.py', 'dataSet=MNIST', 'classes=2,3'])            
@@ -73,7 +69,8 @@ class TestModel(unittest.TestCase):
     def test_model_4(self):
         self.create_model('main.py', 'dataSet=ImageNet', 'classes=00229,00283')
 
-# compare cos similarity between test images and representative images for each class object
+# compare cos similarity between test images and representative images from each object class
+# (works only for mnist)
 def test_image(digitMatrices, test_files):
     num_tests = tests_passed = tests_failed = 0
     if os.path.isdir(test_files):
@@ -86,7 +83,7 @@ def test_image(digitMatrices, test_files):
             test_img = create_matrix(img_dict)
             dict = {}  # rep_img: cos_similarity
             for i in range(0, 10):
-                # get indices of 3 rep imgs for each digit
+                # get indices of n rep imgs for each digit
                 digitMatrix = digitMatrices.matrices[str(i)]
                 rep_imgs = digitMatrix.representative_img
                 rep_imgs = [digitMatrix.img_dict[rep_img] for rep_img in rep_imgs]
@@ -95,7 +92,6 @@ def test_image(digitMatrices, test_files):
                 # print(f"cos similarity between unknown img and {i}: {cos_similarity}")
             max_similarity = max(dict.values())
             actual = list(dict.values()).index(max_similarity)
-            # get the path to test_file and extract the name of the last dir
             expected = os.path.basename(os.path.dirname(test_file))
             if(str(actual) == str(expected)):
                 tests_passed += 1
