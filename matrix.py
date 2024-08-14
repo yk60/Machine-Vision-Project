@@ -7,16 +7,7 @@ from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-imageNet_dict = {
-    '00153': 'Maltese',
-    '00200': 'Tibetan terrier',
-    '00229': 'Old English sheepdog',
-    '00281': 'Tabby cat',
-    '00282': 'Tiger cat',
-    '00283': 'Persian cat',
-    '00284': 'Siamese cat',
-
-}
+labels_dict = {}
 class DigitMatrices:
     def __init__(self):
         self.matrices = {}
@@ -28,8 +19,8 @@ class DigitMatrices:
             print(f"Num training images: {len(matrix.img_dict)}")
             # print(f"{matrix.cos_similarity}\n\n\n")
     def getClassName(self, predicted, actual):
-        predicted = imageNet_dict.get(predicted, predicted)
-        actual = imageNet_dict.get(actual, actual)
+        predicted = labels_dict.get(predicted, predicted)
+        actual = labels_dict.get(actual, actual)
         return predicted, actual
     # choose W that minimizes the error between AW and y
     def project_to_subspace(self, img_dict, y, object):
@@ -182,7 +173,15 @@ def get_imageNet_classes():
             if int(key) == 500:
                 break
     insert_to_html('index.html', html_content,"<!-- Start of ImageNet select -->", "<!-- End of ImageNet select -->")
+def set_labels_dict():
+    dir = 'ImageNet/ImageNet1000_labels.txt'
+    with open(dir, 'r') as file:
+        labels_dict.update(eval(file.read()))  
+    updated_dict = {f"{str(key).rjust(5, '0')}": value for key, value in labels_dict.items()}
+    labels_dict.clear()
+    labels_dict.update(updated_dict)
 
+        
 # do template rendering, insert html content into placeholders in html file
 def insert_to_html(file, html_content, start_marker, end_marker):
     with open(file, 'r') as html_file:
