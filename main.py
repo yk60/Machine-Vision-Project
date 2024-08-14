@@ -8,7 +8,7 @@ import time
 
 start_time = time.time()
 # build model
-optional_params = ['imgSize', 'num_classes', 'classes']
+optional_params = ['classes', 'imgSize', 'threshold_ratio']
 required_params = ['dataSet'] # add more
 params_dict = parse_cmdline(required_params, optional_params)
 if params_dict:
@@ -18,6 +18,7 @@ if params_dict:
     if params_dict['dataSet'].lower() == 'imagenet':
         params_dict.update(imageNet_dict)
     digitMatrices = DigitMatrices() 
+    
     # train model   
     for object in params_dict['classes']:
         paths = [os.path.join(dir, object) for dir in params_dict['filePath']]
@@ -36,7 +37,7 @@ if params_dict:
     # digitMatrices.printMatrices()
     # visualize_embeddings_pca([matrix.embedding_matrix for matrix in digitMatrices.matrices.values()], [matrix.digit for matrix in digitMatrices.matrices.values()])
     # visualize_embeddings_pca_3d([matrix.embedding_matrix for matrix in digitMatrices.matrices.values()], [matrix.digit for matrix in digitMatrices.matrices.values()])
-    # generate_html_table(digitMatrices.matrices['0'])
+    # generate_html_table(digitMatrices.matrices['0']) 
 else:
     print('returned an empty dictionary')
 

@@ -2,7 +2,7 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 from PIL import Image, ImageOps
-from genutils import params_dict
+from genutils import params_dict, parse_cmdline
 # from matrix import DigitMatrix, DigitMatrices
 
 # load an image file into a 2D numpy array of gray pixel values
@@ -64,6 +64,9 @@ def show_image(img_arr):
 
 def main():
     dir = 'images/'
+    optional_params = ['imgSize', 'num_classes', 'classes']
+    required_params = ['dataSet'] # add more
+    params_dict = parse_cmdline(required_params, optional_params)
     img_dict = create_dictionary(dir)
     matrix = create_matrix(img_dict)
   

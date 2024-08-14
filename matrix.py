@@ -60,7 +60,7 @@ class DigitMatrices:
                 i += 1
                 num_tests += 1
             accuracy = np.round((tests_passed / num_tests) * 100, 2)
-            print(f"Selected classes: {[matrix.digit for matrix in self.matrices.values()]} Classify: {actual}")
+            print(f"Selected classes: {[matrix.digit for matrix in self.matrices.values()]} Class: {actual}")
             print(f"Num tests passed: {tests_passed}")
             print(f"Num tests failed: {tests_failed}")
             print(f"Accuracy: {accuracy}%\n")
@@ -90,7 +90,7 @@ class DigitMatrix:
         self.setRepImg()   
         # self.apply_SVD(0.18, None)
         # self.apply_SVD(0.2, None)
-        self.apply_SVD(params_dict.get('threshold_ratio', 0.01), params_dict.get('max_eigenvector', 10))
+        self.apply_SVD(params_dict.get('threshold_ratio', 0.01), params_dict.get('max_eigenvector', None))
         # 0.95, 10
 
         # self.apply_SVD(0.01, None)
@@ -126,7 +126,7 @@ class DigitMatrix:
     U = subspace spanned by the cols of matrix A
     '''
     # decompose the matrix into 3 simpler matrices to reduce dimensionality and find pattern within the data 
-    def apply_SVD(self, threshold_ratio=0.01, max_principal_eigenvectors=None):
+    def apply_SVD(self, threshold_ratio, max_principal_eigenvectors):
         # print(threshold_ratio)
         U, S, VT = np.linalg.svd(self.matrix, full_matrices=False)
         principle_eigenvalue = np.max(S)
@@ -139,7 +139,6 @@ class DigitMatrix:
         self.S = S[indices] # S = singular value
         self.VT = VT[indices, :] # VT = MT*M
         self.pre_computed_matrix = np.linalg.pinv(self.U) #  pseudoinverse of U
-        # count of indices that passed the cutoff
         max_principal_eigenvectors = len(indices)
         self.embedding_matrix = np.dot(self.U, self.pre_computed_matrix)  # U*UT
         
